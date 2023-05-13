@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">DrugManagement</string>
+
+    <string-array name="roles">
+        <item>Manufacturer</item>
+        <item>Depo</item>
+        <item>Wholesaler</item>
+        <item>Retailer</item>
+        <item>Doctor</item>
+        <item>Drug Commissioner</item>
+    </string-array>
+</resources>

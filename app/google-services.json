@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "622022834204",
+    "project_id": "drugmanagement-42968",
+    "storage_bucket": "drugmanagement-42968.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:622022834204:android:0c19321e2604d8b57487d9",
+        "android_client_info": {
+          "package_name": "com.project.drugmanagement"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "622022834204-mulie6ic5o22cnloe4tla33oprpm0s7a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAz3KQ8x2hN8JMZG5sB0jIfh81yoPMo15w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "622022834204-mulie6ic5o22cnloe4tla33oprpm0s7a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
