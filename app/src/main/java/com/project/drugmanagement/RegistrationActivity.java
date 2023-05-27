@@ -3,6 +3,7 @@ package com.project.drugmanagement;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Patterns;
@@ -32,27 +33,14 @@ public class RegistrationActivity extends AppCompatActivity {
         registerationBinding = ActivityRegistrationBinding.inflate(getLayoutInflater());
         setContentView(registerationBinding.getRoot());
 
-        registerationBinding.editTextQualification.setEnabled(false);
+
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, R.layout.drop_down_item, getResources().getStringArray(R.array.roles));
         registerationBinding.autoCompleteTextViewRole.setAdapter(arrayAdapter);
-
-        // get Selected role from autoCompleteTextView
         registerationBinding.autoCompleteTextViewRole.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 selectedRole = adapterView.getItemAtPosition(i).toString();
-
-                    try {
-                        if (selectedRole.equals("Doctor")) {
-                            registerationBinding.editTextQualification.setEnabled(true);
-                        }
-                    }
-                    catch(Exception E)
-                    {
-                        Toast.makeText(RegistrationActivity.this, "Null pointer Exception"+E , Toast.LENGTH_SHORT).show();
-                    }
-
-
+                Toast.makeText(RegistrationActivity.this,""+selectedRole,Toast.LENGTH_LONG).show();
             }
         });
 
@@ -63,16 +51,11 @@ public class RegistrationActivity extends AppCompatActivity {
                 String textEmail = registerationBinding.editTextEmail.getText().toString();
                 String textPwd = registerationBinding.editTextPassword.getText().toString();
                 String textConfirmPwd = registerationBinding.editTextConfirmPassword.getText().toString();
-                String textName = registerationBinding.editTextName.getText().toString();
-                String textDlno = registerationBinding.editTextDlno1.getText().toString();
-                String textAddress = registerationBinding.editTextAddress.getText().toString();
-                String textContact = registerationBinding.editTextContact.getText().toString();
-                String textQualification = registerationBinding.editTextQualification.getText().toString();
 
                 if (TextUtils.isEmpty(selectedRole)) {
                     Toast.makeText(RegistrationActivity.this, "First Select Your role !", Toast.LENGTH_SHORT).show();
                     registerationBinding.autoCompleteTextViewRole.setError("Role is Required");
-                } else if (TextUtils.isEmpty(textEmail)) {
+                }else if (TextUtils.isEmpty(textEmail)) {
                     Toast.makeText(RegistrationActivity.this, "Please enter your Email !", Toast.LENGTH_SHORT).show();
                     registerationBinding.editTextEmail.setError("Email is required");
                     registerationBinding.editTextEmail.requestFocus();
@@ -99,34 +82,15 @@ public class RegistrationActivity extends AppCompatActivity {
                     // clear all editText fields
                     registerationBinding.editTextConfirmPassword.clearComposingText();
                     registerationBinding.editTextConfirmPassword.clearComposingText();
-                } else if (TextUtils.isEmpty(textName)) {
-                    Toast.makeText(RegistrationActivity.this, "Please enter your name !", Toast.LENGTH_SHORT).show();
-                    registerationBinding.editTextName.setError("Name is required");
-                    registerationBinding.editTextName.requestFocus();
-                } else if (TextUtils.isEmpty(textAddress)) {
-                    Toast.makeText(RegistrationActivity.this, "Please enter city/villege name !", Toast.LENGTH_SHORT).show();
-                    registerationBinding.editTextAddress.setError("City/Villege name is required");
-                    registerationBinding.editTextAddress.requestFocus();
-                } else if (TextUtils.isEmpty(textContact)) {
-                    Toast.makeText(RegistrationActivity.this, "Please enter contact no. !", Toast.LENGTH_SHORT).show();
-                    registerationBinding.editTextContact.setError("Contact no. is required");
-                    registerationBinding.editTextContact.requestFocus();
-                } else if (selectedRole.equals("Doctor")) {
-                    if (TextUtils.isEmpty(textQualification))
-                    {
-                        Toast.makeText(RegistrationActivity.this, "Please enter Qualification details. !", Toast.LENGTH_SHORT).show();
-                        registerationBinding.editTextContact.setError("Qualification is required");
-                        registerationBinding.editTextContact.requestFocus();
-                    }
                 }  else {
                     registerationBinding.progressBar.setVisibility(View.VISIBLE);
-                    registerUser(textEmail, textPwd , textName ,textDlno ,textAddress ,textContact ,textQualification , selectedRole);
+                    registerUser(textEmail, textPwd ,selectedRole);
                 }
             }
         });
     }
 
-    private void registerUser(String email, String pwd, String textName, String textDlno, String textAddress, String textContact, String textQualification , String role) {
+    private void registerUser(String email, String pwd , String selectedRole) {
         
         FirebaseAuth authProfile = FirebaseAuth.getInstance();
         //create user with provided credentials
@@ -138,11 +102,18 @@ public class RegistrationActivity extends AppCompatActivity {
                 {
                     Toast.makeText(RegistrationActivity.this, "User Registered Successfully...!", Toast.LENGTH_SHORT).show();
                     FirebaseUser firebaseUser = authProfile.getCurrentUser();
-
-                    //Enter UserData into Firebase realtime database
-
-                    ReadWriteUserDetails writeUserDetails = new ReadWriteUserDetails(email,textName,textDlno,textAddress,textContact);
                     registerationBinding.progressBar.setVisibility(View.GONE);
+                    //Enter UserRole data in authentication
+                    UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.Builder()
+                            .setDisplayName(selectedRole).build();
+                    firebaseUser.updateProfile(profileChangeRequest);
+
+                    Intent intent = new Intent(RegistrationActivity.this,MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                    overridePendingTransition(0,0);
+                    finish();
+
                 }
                 // if user registration is unsuccessfull
                 else {

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_doctor"
+    app:startDestination="@id/fragment_doctor_home">
+
+    <fragment
+        android:id="@+id/fragment_doctor_home"
+        android:name="com.project.drugmanagement.HomeScreen.Doctor.fragment_doctor_home"
+        android:label="fragment_doctor_home"
+        tools:layout="@layout/fragment_doctor_home" >
+        <action
+            android:id="@+id/action_fragment_doctor_home_to_addUserDetails5"
+            app:destination="@id/addUserDetails5" />
+    </fragment>
+    <activity
+        android:id="@+id/addUserDetails5"
+        android:name="com.project.drugmanagement.AddUserDetails"
+        android:label="activity_add_user_details"
+        tools:layout="@layout/activity_add_user_details" />
+</navigation>
