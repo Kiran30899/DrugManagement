@@ -24,14 +24,14 @@
         android:name="com.project.drugmanagement.HomeScreen.Retailer.fragment_get_patientInfo"
         android:label="fragment_get_patient_info"
         tools:layout="@layout/fragment_get_patient_info" />
-    <fragment
-        android:id="@+id/fragment_retailer_sell2"
-        android:name="com.project.drugmanagement.HomeScreen.Retailer.fragment_retailer_sell"
-        android:label="fragment_retailer_sell"
-        tools:layout="@layout/fragment_retailer_sell" />
     <activity
         android:id="@+id/addUserDetails4"
         android:name="com.project.drugmanagement.AddUserDetails"
         android:label="activity_add_user_details"
         tools:layout="@layout/activity_add_user_details" />
+    <fragment
+        android:id="@+id/fragment_retailer_sell2"
+        android:name="com.project.drugmanagement.HomeScreen.Retailer.fragment_retailer_sell"
+        android:label="fragment_retailer_sell"
+        tools:layout="@layout/fragment_retailer_sell" />
 </navigation>

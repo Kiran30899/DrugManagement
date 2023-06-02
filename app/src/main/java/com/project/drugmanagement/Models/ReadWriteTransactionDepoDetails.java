@@ -1,43 +1,37 @@
 package com.project.drugmanagement.Models;
 
-public class ReadWriteTransactionDetails {
-    String depoName ;
+public class ReadWriteTransactionDepoDetails {
+    String depoName;
+    String wholesalerName ;
     String invoiceNo;
     String invoiceDate;
     String productName;
-    String mfgDate;
     String batch;
     String quantity;
     String pack;
     int total;
-    String mfgName;
 
-
-    public ReadWriteTransactionDetails() {
-        //required empty constructor
+    public ReadWriteTransactionDepoDetails() {
     }
 
-
-
-    public ReadWriteTransactionDetails(String depoName, String invoiceNo, String invoiceDate, String productName, String mfgName, String mfgDate, String batch, String quantity, String pack, int total) {
+    public ReadWriteTransactionDepoDetails(String depoName,String wholesalerName, String invoiceNo, String invoiceDate, String productName, String batch, String quantity, String pack, int total) {
         this.depoName = depoName;
+        this.wholesalerName = wholesalerName;
         this.invoiceNo = invoiceNo;
         this.invoiceDate = invoiceDate;
         this.productName = productName;
-        this.mfgDate = mfgDate;
         this.batch = batch;
         this.quantity = quantity;
         this.pack = pack;
         this.total = total;
-        this.mfgName = mfgName;
     }
 
-    public String getDepoName() {
-        return depoName;
+    public String getWholesalerName() {
+        return wholesalerName;
     }
 
-    public void setDepoName(String depoName) {
-        this.depoName = depoName;
+    public void setWholesalerName(String wholesalerName) {
+        this.wholesalerName = wholesalerName;
     }
 
     public String getInvoiceNo() {
@@ -64,14 +58,6 @@ public class ReadWriteTransactionDetails {
         this.productName = productName;
     }
 
-    public String getMfgDate() {
-        return mfgDate;
-    }
-
-    public void setMfgDate(String mfgDate) {
-        this.mfgDate = mfgDate;
-    }
-
     public String getBatch() {
         return batch;
     }
@@ -94,13 +80,6 @@ public class ReadWriteTransactionDetails {
 
     public void setPack(String pack) {
         this.pack = pack;
-    }
-    public String getMfgName() {
-        return mfgName;
-    }
-
-    public void setMfgName(String mfgName) {
-        this.mfgName = mfgName;
     }
 
     public int getTotal() {

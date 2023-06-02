@@ -31,8 +31,6 @@ import com.project.drugmanagement.Models.ReadWriteProductionDetails;
 import com.project.drugmanagement.R;
 import com.project.drugmanagement.databinding.FragmentNewBatchBinding;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 

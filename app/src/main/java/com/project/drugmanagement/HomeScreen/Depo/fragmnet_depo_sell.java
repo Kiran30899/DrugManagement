@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,11 +21,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.project.drugmanagement.Models.ReadWriteMonthArray;
+import com.google.firebase.firestore.SetOptions;
 import com.project.drugmanagement.Models.ReadWriteProductsArray;
+import com.project.drugmanagement.Models.ReadWriteTransactionDepoDetails;
 import com.project.drugmanagement.Models.ReadWriteTransactionDetails;
 import com.project.drugmanagement.R;
 import com.project.drugmanagement.databinding.FragmentFragmnetDepoSellBinding;
@@ -137,6 +140,101 @@ public class fragmnet_depo_sell extends Fragment {
                 depoSellBinding.autoCompleteTextViewProductPacking.setText(pack,false);
             }
         });
+
+        depoSellBinding.btnSell.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                String invoiceNo = depoSellBinding.editTextInvoiceNo.getText().toString();
+                String invoiceDate = depoSellBinding.editTextInvoicedate.getText().toString();
+                String quantity = depoSellBinding.editTextQuantity.getText().toString();
+
+
+                if (TextUtils.isEmpty(wholesalerName)) {
+                    Toast.makeText(getActivity(),"Please select wholesalerName ..",Toast.LENGTH_SHORT).show();
+                    depoSellBinding.autoCompleteTextViewWholesaler.setError("wholesalerName required");
+                } else if (TextUtils.isEmpty(invoiceNo)) {
+                    Toast.makeText(getActivity(),"Please enter invoice no.",Toast.LENGTH_SHORT).show();
+                    depoSellBinding.editTextInvoiceNo.setError("invoice no required");
+                } else if (TextUtils.isEmpty(invoiceDate)) {
+                    Toast.makeText(getActivity(),"Please enter invoice date.",Toast.LENGTH_SHORT).show();
+                    depoSellBinding.editTextInvoicedate.setError("invoice date required");
+                } else if (TextUtils.isEmpty(quantity)) {
+                    Toast.makeText(getActivity(),"Please enter quantity.",Toast.LENGTH_SHORT).show();
+                    depoSellBinding.editTextQuantity.setError("quantity required");
+                } else if (TextUtils.isEmpty(prodName)) {
+                    Toast.makeText(getActivity(),"Please select product.",Toast.LENGTH_SHORT).show();
+                    depoSellBinding.autoCompleteTextViewProduct.setError("Select product");
+                }  else if (TextUtils.isEmpty(batch)) {
+                    Toast.makeText(getActivity(), "Please select batch", Toast.LENGTH_SHORT).show();
+                    depoSellBinding.autoCompleteTextViewProductBatch.setError("select product batch");
+                } else if (TextUtils.isEmpty(pack)) {
+                    Toast.makeText(getActivity(),"select packing details",Toast.LENGTH_SHORT).show();
+                    depoSellBinding.autoCompleteTextViewProductPacking.setError("packing required");
+                }  else {
+                    sellProduct(wholesalerName,invoiceNo,invoiceDate,prodName,batch,quantity,pack);
+                }
+            }
+        });
+    }
+
+    private void sellProduct(String wholesalerName, String invoiceNo, String invoiceDate, String prodName, String batch, String quantity, String pack) {
+        CollectionReference collectionReference = db.collection("Transaction");
+        int total = Integer.parseInt(quantity) * Integer.parseInt(pack);
+
+        ReadWriteTransactionDepoDetails writeTransactionDetails = new ReadWriteTransactionDepoDetails(depoName,wholesalerName,invoiceNo,invoiceDate,prodName,batch,quantity,pack,total);
+
+        //create new outward transaction into new depo subcollection in transaction
+        collectionReference.document("Depo").collection(depoName).document("outward").collection(prodName).document(invoiceNo).set(writeTransactionDetails).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                collectionReference.document("Depo").collection(depoName).document("outward").get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        Toast.makeText(getActivity(), "Transaction Successfully saved", Toast.LENGTH_SHORT).show();
+                        depoSellBinding.editTextQuantity.setText("");
+                        depoSellBinding.editTextInvoiceNo.setText("");
+                        if (documentSnapshot.contains("productNames")){
+                            collectionReference.document("Depo").collection(depoName).document("outward").update("productNames",FieldValue.arrayUnion(prodName));
+                        }
+                        else {
+                            collectionReference.document("Depo").collection(depoName).document("outward").set(new ReadWriteProductsArray(),SetOptions.merge());
+                            collectionReference.document("Depo").collection(depoName).document("outward").update("productNames",FieldValue.arrayUnion(prodName));
+                        }
+                    }
+                });
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getActivity(),"something went wrong ",Toast.LENGTH_SHORT).show();
+                Log.d(TAG,e.toString());
+            }
+        });
+
+        collectionReference.document("Wholesaler").collection(wholesalerName).document("inward").collection(prodName).document(invoiceNo).set(writeTransactionDetails).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                collectionReference.document("Wholesaler").collection(wholesalerName).document("inward").get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.contains("productNames")){
+                            collectionReference.document("Wholesaler").collection(wholesalerName).document("inward").update("productNames",FieldValue.arrayUnion(prodName));
+                        }
+                        else {
+                            collectionReference.document("Wholesaler").collection(wholesalerName).document("inward").set(new ReadWriteProductsArray(),SetOptions.merge());
+                            collectionReference.document("Wholesaler").collection(wholesalerName).document("inward").update("productNames",FieldValue.arrayUnion(prodName));
+                        }
+                    }
+                });
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getActivity(),"something went wrong ",Toast.LENGTH_SHORT).show();
+                Log.d(TAG,e.toString());
+            }
+        });
     }
 
     //load all batches of selected prodName into autoCompleteTextView
@@ -201,6 +299,7 @@ public class fragmnet_depo_sell extends Fragment {
                 });
     }
 
+    // load wholesalers name in autoCompleteTextView
     private void loadWholesalerNames() {
         CollectionReference wholesalerReference = db.collection("Wholesaler");
         wholesalerReference.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -221,6 +320,7 @@ public class fragmnet_depo_sell extends Fragment {
         });
     }
 
+    //set Invoice Date
     private void loadInvoiceDate() {
         Calendar calendar = Calendar.getInstance();
         String[] monthName = {"jan", "feb", "mar", "apr", "may", "jun", "jul",

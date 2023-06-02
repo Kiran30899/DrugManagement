@@ -174,10 +174,10 @@ public class fragment_sell extends Fragment {
                     sellBinding.editTextInvoiceNo.setError("invoice no required");
                 } else if (TextUtils.isEmpty(invoiceDate)) {
                     Toast.makeText(getActivity(),"Please enter invoice date.",Toast.LENGTH_SHORT).show();
-                    sellBinding.editTextInvoicedate.setError("invoice no required");
+                    sellBinding.editTextInvoicedate.setError("invoice date required");
                 } else if (TextUtils.isEmpty(quantity)) {
                     Toast.makeText(getActivity(),"Please enter quantity.",Toast.LENGTH_SHORT).show();
-                    sellBinding.editTextQuantity.setError("invoice no required");
+                    sellBinding.editTextQuantity.setError("quantity required");
                 } else if (TextUtils.isEmpty(prodName)) {
                     Toast.makeText(getActivity(),"Please select product.",Toast.LENGTH_SHORT).show();
                     sellBinding.autoCompleteTextViewProduct.setError("Select product");
@@ -204,7 +204,8 @@ public class fragment_sell extends Fragment {
     private void sellProduct(String depoName, String invoiceNo, String invoiceDate, String prodName, String month, String batch, String quantity, String pack) {
         CollectionReference collectionReference = db.collection("Transaction");
        int total = Integer.parseInt(quantity) * Integer.parseInt(pack);
-        ReadWriteTransactionDetails writeTransactionDetails = new ReadWriteTransactionDetails(depoName,invoiceNo,invoiceDate,prodName,month,batch,quantity,pack,total);
+
+        ReadWriteTransactionDetails writeTransactionDetails = new ReadWriteTransactionDetails(depoName,invoiceNo,invoiceDate,prodName,companyName,month,batch,quantity,pack,total);
 
         //creates dopoNames array if it not exist or add new value in it if exists
         collectionReference.document(firebaseUser.getDisplayName()).collection(companyName).document(month).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -232,7 +233,6 @@ public class fragment_sell extends Fragment {
                     @Override
                     public void onSuccess(Void unused) {
                         Toast.makeText(getActivity(), "Transaction Successfully saved", Toast.LENGTH_SHORT).show();
-                        sellBinding.editTextInvoicedate.setText("");
                         sellBinding.editTextQuantity.setText("");
                         sellBinding.editTextInvoiceNo.setText("");
                     }
