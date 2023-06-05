@@ -4,32 +4,34 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="20dp"
-    tools:context=".HomeScreen.Doctor.fragment_doctor_home">
+
+    tools:context=".HomeScreen.DrugOfficer.fragment_drugOfficer_manufacturer">
 
     <Button
-        android:id="@+id/btnAddUserDetails"
+        android:id="@+id/btnProduction"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Add User Details"
+        android:text="Production"
         android:textSize="20sp"
+        android:padding="15dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <Button
+        android:id="@+id/btnManufSell"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sell"
+        android:textSize="20sp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:padding="15dp"
         android:layout_marginTop="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/btngetPatientDetails"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="15dp"
-        android:text="Patient Details"
-        android:textSize="20sp"
-        android:layout_marginTop="15dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.9"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnAddUserDetails" />
+        app:layout_constraintTop_toBottomOf="@id/btnProduction" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -14,7 +14,9 @@ public class ReadWriteTransactionDepoDetails {
     public ReadWriteTransactionDepoDetails() {
     }
 
-    public ReadWriteTransactionDepoDetails(String depoName,String wholesalerName, String invoiceNo, String invoiceDate, String productName, String batch, String quantity, String pack, int total) {
+
+
+    public ReadWriteTransactionDepoDetails(String depoName, String wholesalerName, String invoiceNo, String invoiceDate, String productName, String batch, String quantity, String pack, int total) {
         this.depoName = depoName;
         this.wholesalerName = wholesalerName;
         this.invoiceNo = invoiceNo;
@@ -88,5 +90,12 @@ public class ReadWriteTransactionDepoDetails {
 
     public void setTotal(int total) {
         this.total = total;
+    }
+    public String getDepoName() {
+        return depoName;
+    }
+
+    public void setDepoName(String depoName) {
+        this.depoName = depoName;
     }
 }

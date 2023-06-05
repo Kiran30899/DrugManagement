@@ -18,6 +18,7 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.project.drugmanagement.HomeScreen.Depo.DepoHome;
 import com.project.drugmanagement.HomeScreen.Doctor.DoctorHome;
+import com.project.drugmanagement.HomeScreen.DrugOfficer.DrugOfficerHome;
 import com.project.drugmanagement.HomeScreen.Manufacturer.ManufacturerHome;
 import com.project.drugmanagement.HomeScreen.Retailer.RetailerHome;
 import com.project.drugmanagement.HomeScreen.Wholesaler.WholesalerHome;
@@ -83,7 +84,8 @@ public class LoginActivity extends AppCompatActivity {
                         startActivity(new Intent(LoginActivity.this, DoctorHome.class));
                         finish();
                     } else {
-                      //  Drug Commissioner
+                        startActivity(new Intent(LoginActivity.this, DrugOfficerHome.class));
+                        finish();
                     }
                     loginBinding.progressBar.setVisibility(View.GONE);
                 }

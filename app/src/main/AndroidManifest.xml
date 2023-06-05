@@ -13,6 +13,9 @@
         android:theme="@style/Theme.DrugManagement"
         tools:targetApi="31">
         <activity
+            android:name=".HomeScreen.DrugOfficer.DrugOfficerHome"
+            android:exported="false" />
+        <activity
             android:name=".HomeScreen.Doctor.DoctorHome"
             android:exported="false" />
         <activity

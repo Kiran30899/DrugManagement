@@ -142,64 +142,64 @@ public class fragmnet_depo_sell extends Fragment {
         });
 
         depoSellBinding.btnSell.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        @Override
+        public void onClick(View view) {
 
-                String invoiceNo = depoSellBinding.editTextInvoiceNo.getText().toString();
-                String invoiceDate = depoSellBinding.editTextInvoicedate.getText().toString();
-                String quantity = depoSellBinding.editTextQuantity.getText().toString();
+            String invoiceNo = depoSellBinding.editTextInvoiceNo.getText().toString();
+            String invoiceDate = depoSellBinding.editTextInvoicedate.getText().toString();
+            String quantity = depoSellBinding.editTextQuantity.getText().toString();
 
 
-                if (TextUtils.isEmpty(wholesalerName)) {
-                    Toast.makeText(getActivity(),"Please select wholesalerName ..",Toast.LENGTH_SHORT).show();
-                    depoSellBinding.autoCompleteTextViewWholesaler.setError("wholesalerName required");
-                } else if (TextUtils.isEmpty(invoiceNo)) {
-                    Toast.makeText(getActivity(),"Please enter invoice no.",Toast.LENGTH_SHORT).show();
-                    depoSellBinding.editTextInvoiceNo.setError("invoice no required");
-                } else if (TextUtils.isEmpty(invoiceDate)) {
-                    Toast.makeText(getActivity(),"Please enter invoice date.",Toast.LENGTH_SHORT).show();
-                    depoSellBinding.editTextInvoicedate.setError("invoice date required");
-                } else if (TextUtils.isEmpty(quantity)) {
-                    Toast.makeText(getActivity(),"Please enter quantity.",Toast.LENGTH_SHORT).show();
-                    depoSellBinding.editTextQuantity.setError("quantity required");
-                } else if (TextUtils.isEmpty(prodName)) {
-                    Toast.makeText(getActivity(),"Please select product.",Toast.LENGTH_SHORT).show();
-                    depoSellBinding.autoCompleteTextViewProduct.setError("Select product");
-                }  else if (TextUtils.isEmpty(batch)) {
-                    Toast.makeText(getActivity(), "Please select batch", Toast.LENGTH_SHORT).show();
-                    depoSellBinding.autoCompleteTextViewProductBatch.setError("select product batch");
-                } else if (TextUtils.isEmpty(pack)) {
-                    Toast.makeText(getActivity(),"select packing details",Toast.LENGTH_SHORT).show();
-                    depoSellBinding.autoCompleteTextViewProductPacking.setError("packing required");
-                }  else {
-                    sellProduct(wholesalerName,invoiceNo,invoiceDate,prodName,batch,quantity,pack);
-                }
+            if (TextUtils.isEmpty(wholesalerName)) {
+                Toast.makeText(getActivity(),"Please select wholesalerName ..",Toast.LENGTH_SHORT).show();
+                depoSellBinding.autoCompleteTextViewWholesaler.setError("wholesalerName required");
+            } else if (TextUtils.isEmpty(invoiceNo)) {
+                Toast.makeText(getActivity(),"Please enter invoice no.",Toast.LENGTH_SHORT).show();
+                depoSellBinding.editTextInvoiceNo.setError("invoice no required");
+            } else if (TextUtils.isEmpty(invoiceDate)) {
+                Toast.makeText(getActivity(),"Please enter invoice date.",Toast.LENGTH_SHORT).show();
+                depoSellBinding.editTextInvoicedate.setError("invoice date required");
+            } else if (TextUtils.isEmpty(quantity)) {
+                Toast.makeText(getActivity(),"Please enter quantity.",Toast.LENGTH_SHORT).show();
+                depoSellBinding.editTextQuantity.setError("quantity required");
+            } else if (TextUtils.isEmpty(prodName)) {
+                Toast.makeText(getActivity(),"Please select product.",Toast.LENGTH_SHORT).show();
+                depoSellBinding.autoCompleteTextViewProduct.setError("Select product");
+            }  else if (TextUtils.isEmpty(batch)) {
+                Toast.makeText(getActivity(), "Please select batch", Toast.LENGTH_SHORT).show();
+                depoSellBinding.autoCompleteTextViewProductBatch.setError("select product batch");
+            } else if (TextUtils.isEmpty(pack)) {
+                Toast.makeText(getActivity(),"select packing details",Toast.LENGTH_SHORT).show();
+                depoSellBinding.autoCompleteTextViewProductPacking.setError("packing required");
+            }  else {
+                sellProduct(depoName,wholesalerName,invoiceNo,invoiceDate,prodName,batch,quantity,pack);
             }
-        });
-    }
+        }
+    });
+}
 
-    private void sellProduct(String wholesalerName, String invoiceNo, String invoiceDate, String prodName, String batch, String quantity, String pack) {
+    private void sellProduct(String depoNm, String wholesalerName, String invoiceNo, String invoiceDate, String prodName, String batch, String quantity, String pack) {
         CollectionReference collectionReference = db.collection("Transaction");
         int total = Integer.parseInt(quantity) * Integer.parseInt(pack);
 
-        ReadWriteTransactionDepoDetails writeTransactionDetails = new ReadWriteTransactionDepoDetails(depoName,wholesalerName,invoiceNo,invoiceDate,prodName,batch,quantity,pack,total);
+        ReadWriteTransactionDepoDetails writeTransactionDetails = new ReadWriteTransactionDepoDetails(depoNm,wholesalerName,invoiceNo,invoiceDate,prodName,batch,quantity,pack ,total);
 
         //create new outward transaction into new depo subcollection in transaction
-        collectionReference.document("Depo").collection(depoName).document("outward").collection(prodName).document(invoiceNo).set(writeTransactionDetails).addOnSuccessListener(new OnSuccessListener<Void>() {
+        collectionReference.document("Depo").collection(fragmnet_depo_sell.depoName).document("outward").collection(prodName).document(invoiceNo).set(writeTransactionDetails).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
-                collectionReference.document("Depo").collection(depoName).document("outward").get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                collectionReference.document("Depo").collection(fragmnet_depo_sell.depoName).document("outward").get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         Toast.makeText(getActivity(), "Transaction Successfully saved", Toast.LENGTH_SHORT).show();
                         depoSellBinding.editTextQuantity.setText("");
                         depoSellBinding.editTextInvoiceNo.setText("");
                         if (documentSnapshot.contains("productNames")){
-                            collectionReference.document("Depo").collection(depoName).document("outward").update("productNames",FieldValue.arrayUnion(prodName));
+                            collectionReference.document("Depo").collection(fragmnet_depo_sell.depoName).document("outward").update("productNames",FieldValue.arrayUnion(prodName));
                         }
                         else {
-                            collectionReference.document("Depo").collection(depoName).document("outward").set(new ReadWriteProductsArray(),SetOptions.merge());
-                            collectionReference.document("Depo").collection(depoName).document("outward").update("productNames",FieldValue.arrayUnion(prodName));
+                            collectionReference.document("Depo").collection(fragmnet_depo_sell.depoName).document("outward").set(new ReadWriteProductsArray(),SetOptions.merge());
+                            collectionReference.document("Depo").collection(fragmnet_depo_sell.depoName).document("outward").update("productNames",FieldValue.arrayUnion(prodName));
                         }
                     }
                 });
